@@ -13,7 +13,7 @@
 #include "FLIPForce.h"
 #include "math.h"
 #include "FLIPOccupancyVolume.h"
-#include "FLIPVelocityGridPoint.h"
+#include "FLIPVelocityGrid.h"
 #include <iostream>
 
 enum UPDATE_FUNCTION {LEAP_FROG, SIXTH};
@@ -38,7 +38,7 @@ class FLIPSolver {
     float dampening;
     float h;
     bool party_mode;
-    std::vector<FLIPVelocityGridPoint> velocity_grid;
+    FLIPVelocityGrid velocity_grid;
     std::vector<FLIPParticle> particles;
     FLIPOccupancyVolume *occupancy_volume;
     FLIPForce force;

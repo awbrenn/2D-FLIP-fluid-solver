@@ -49,7 +49,7 @@ FLIPSolver::FLIPSolver(unsigned int number_of_particles, const float _lower_boun
     grid_point.position.x = (i % grid_width) * grid_dx;
     grid_point.position.y = (i / grid_width) * grid_dy;
 
-    velocity_grid.push_back(grid_point);
+    velocity_grid.grid.push_back(grid_point);
   }
 }
 
@@ -137,10 +137,10 @@ void FLIPSolver::constructOccupancyVolume(vector2 ovllc, vector2 ovurc) {
 
 void FLIPSolver::constructVelocityGrid() {
   float influence, total_influence;
-  std::vector<FLIPVelocityGridPoint>::iterator vi = velocity_grid.begin();
+  std::vector<FLIPVelocityGridPoint>::iterator vi = velocity_grid.grid.begin();
   std::vector<FLIPParticle>::iterator pi;
 
-  while(vi != velocity_grid.end()) {
+  while(vi != velocity_grid.grid.end()) {
     total_influence = 0.0f;
     vi->velocity = 0.0f;
     vi->velocity = 0.0f;
@@ -154,6 +154,11 @@ void FLIPSolver::constructVelocityGrid() {
       vi->velocity += pi->velocity.x * influence;
       vi->velocity += pi->velocity.y * influence;
       ++pi;
+    }
+
+    // if a particle exists in that grid region add density;
+    if (vi->velocity.length() > 0.0f) {
+      vi->density = 1.0f;
     }
 
     vi->velocity.scale(1.0f / total_influence);

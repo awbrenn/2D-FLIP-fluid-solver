@@ -11,6 +11,7 @@ class FLIPVelocityGridPoint {
   public:
     vector2 velocity;
     vector2 position;
+    float density;
 };
 
 
