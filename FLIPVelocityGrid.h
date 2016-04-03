@@ -12,6 +12,19 @@
 class FLIPVelocityGrid {
   public:
     std::vector<FLIPVelocityGridPoint> grid;
+    int grid_width;
+    int grid_height;
+
+    const float getDensity(int i, int j);
+    const vector2 getVelocity(int i, int j);
+    const float getPressure(int i, int j);
+    const float getDivergence(int i, int j);
+    void computeDivergence();
+    void computePressure();
+    void computePressureForces(int i, int j, float* force_x, float* force_y);
+    void computeVelocityBasedOnPressureForces();
+
+    int gridIndex(int i, int j)        const { return i+grid_width*j; }
 };
 
 

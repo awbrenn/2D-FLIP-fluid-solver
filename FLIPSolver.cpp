@@ -51,6 +51,9 @@ FLIPSolver::FLIPSolver(unsigned int number_of_particles, const float _lower_boun
 
     velocity_grid.grid.push_back(grid_point);
   }
+
+  velocity_grid.grid_width = grid_width;
+  velocity_grid.grid_height = grid_height;
 }
 
 
