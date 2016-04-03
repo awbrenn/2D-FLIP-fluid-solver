@@ -11,8 +11,9 @@
 
 #include "FLIPParticle.h"
 #include "FLIPForce.h"
-#include "FLIPOccupancyVolume.h"
 #include "math.h"
+#include "FLIPOccupancyVolume.h"
+#include "FLIPVelocityGridPoint.h"
 #include <iostream>
 
 enum UPDATE_FUNCTION {LEAP_FROG, SIXTH};
@@ -23,7 +24,8 @@ class SPHSolver {
     void enforceBoundary(SPHParticle *p);
     void calculateDensity (SPHParticle *b);
     float getInfluence(vector2 xb, vector2 xa);
-    void createOccupancyVolume(vector2 ovllc, vector2 ovurc);
+    void constructOccupancyVolume(vector2 ovllc, vector2 ovurc);
+    void constructVelocityGrid();
     void leapFrog(float dt);
     void sixth(float dt);
 
@@ -36,7 +38,7 @@ class SPHSolver {
     float dampening;
     float h;
     bool party_mode;
-    std::vector<vector2> velocity_grid;
+    std::vector<FLIPVelocityGridPoint> velocity_grid;
     std::vector<SPHParticle> particles;
     SPHOccupancyVolume *occupancy_volume;
     SPHForce force;

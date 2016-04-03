@@ -35,7 +35,21 @@ SPHSolver::SPHSolver(unsigned int number_of_particles, const float _lower_bound,
     position.y = getRandomFloatBetweenValues(lower_bound+1.0f, upper_bound-0.5f);
     vector2 velocity = {0.0f, 0.0f};
     particles.push_back(SPHParticle(position, velocity));
-    velocity_grid.push_back(velocity);
+  }
+
+  int grid_height = (int)((upper_bound / h) + 1);
+  int grid_width = (int)((upper_bound / h) + 1);
+  float grid_dx = upper_bound / ((float)(grid_width));
+  float grid_dy = upper_bound / ((float)(grid_height));
+
+  // initalize grid
+  for (unsigned int i = 0; i < grid_height * grid_width; ++i) {
+    FLIPVelocityGridPoint grid_point;
+    grid_point.velocity = vector2(0.0f, 0.0f);
+    grid_point.position.x = (i % grid_width) * grid_dx;
+    grid_point.position.y = (i / grid_width) * grid_dy;
+
+    velocity_grid.push_back(grid_point);
   }
 }
 
@@ -102,7 +116,7 @@ void SPHSolver::calculateDensity (SPHParticle *b) {
 }
 
 
-void SPHSolver::createOccupancyVolume(vector2 ovllc, vector2 ovurc) {
+void SPHSolver::constructOccupancyVolume(vector2 ovllc, vector2 ovurc) {
   unsigned int ovnx, ovny;
   float ovdx, ovdy;
 
@@ -121,8 +135,36 @@ void SPHSolver::createOccupancyVolume(vector2 ovllc, vector2 ovurc) {
   occupancy_volume->cells.resize(ovnx*ovny);
 }
 
+void SPHSolver::constructVelocityGrid() {
+  float influence, total_influence;
+  std::vector<FLIPVelocityGridPoint>::iterator vi = velocity_grid.begin();
+  std::vector<SPHParticle>::iterator pi;
+
+  while(vi != velocity_grid.end()) {
+    total_influence = 0.0f;
+    vi->velocity = 0.0f;
+    vi->velocity = 0.0f;
+
+    pi = particles.begin();
+
+    while(pi != particles.end()) {
+      influence = getInfluence(vi->position, pi->position);
+      total_influence += influence;
+
+      vi->velocity += pi->velocity.x * influence;
+      vi->velocity += pi->velocity.y * influence;
+      ++pi;
+    }
+
+    vi->velocity.scale(1.0f / total_influence);
+    ++vi;
+  }
+}
+
 
 void SPHSolver::leapFrog(float dt) {
+  constructVelocityGrid();
+
   // occupancy volume lower left corner and upper right corner
   vector2 ovllc = vector2(upper_bound, upper_bound);
   vector2 ovurc = vector2(lower_bound, lower_bound);
@@ -147,7 +189,7 @@ void SPHSolver::leapFrog(float dt) {
   occupancy_volume->ovurc = ovurc;
 
   // create and populate the occupancy volume
-  createOccupancyVolume(ovllc, ovurc);
+  constructOccupancyVolume(ovllc, ovurc);
   occupancy_volume->populateOccupancyVolume(&particles);
 
   pi = particles.begin();
