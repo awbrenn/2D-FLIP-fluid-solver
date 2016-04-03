@@ -6,7 +6,7 @@
 
 
 
-unsigned int SPHOccupancyVolume::getCellIndex(SPHParticle *p) {
+unsigned int FLIPOccupancyVolume::getCellIndex(FLIPParticle *p) {
     unsigned int q_i, q_j, cell_index;
     vector2 q;
 
@@ -19,11 +19,11 @@ unsigned int SPHOccupancyVolume::getCellIndex(SPHParticle *p) {
 }
 
 
-std::vector<size_t> *SPHOccupancyVolume::getCell(SPHParticle *p) {
+std::vector<size_t> *FLIPOccupancyVolume::getCell(FLIPParticle *p) {
     return &cells[getCellIndex(p)];
 }
 
-void SPHOccupancyVolume::getIndicesOfAllPossibleCollisions(SPHParticle *p, std::vector<size_t> *check_indices) {
+void FLIPOccupancyVolume::getIndicesOfAllPossibleCollisions(FLIPParticle *p, std::vector<size_t> *check_indices) {
     int q_i, q_j, cell_index;
     vector2 q;
     std::vector<size_t> cell_indices;
@@ -57,8 +57,8 @@ void SPHOccupancyVolume::getIndicesOfAllPossibleCollisions(SPHParticle *p, std::
     }
 }
 
-void SPHOccupancyVolume::populateOccupancyVolume(std::vector<SPHParticle> *particles) {
-    std::vector<SPHParticle>::iterator pi = particles->begin();
+void FLIPOccupancyVolume::populateOccupancyVolume(std::vector<FLIPParticle> *particles) {
+    std::vector<FLIPParticle>::iterator pi = particles->begin();
     size_t i = 0;
     while(pi != particles->end()) {
         getCell(&(*pi))->push_back(i);

@@ -19,13 +19,13 @@ float getRandomFloatBetweenValues (float lower_bound, float upper_bound) {
 }
 
 
-SPHSolver::SPHSolver(unsigned int number_of_particles, const float _lower_bound, const float _upper_bound, const float _h) {
+FLIPSolver::FLIPSolver(unsigned int number_of_particles, const float _lower_bound, const float _upper_bound, const float _h) {
   lower_bound = _lower_bound;
   upper_bound = _upper_bound;
   dampening = 1.0f;
   update_function = SIXTH;
   party_mode = false;
-  occupancy_volume = new SPHOccupancyVolume();
+  occupancy_volume = new FLIPOccupancyVolume();
   h = _h;
 
   // initialize particles
@@ -34,7 +34,7 @@ SPHSolver::SPHSolver(unsigned int number_of_particles, const float _lower_bound,
     position.x = getRandomFloatBetweenValues(lower_bound+0.5f, upper_bound-0.5f);
     position.y = getRandomFloatBetweenValues(lower_bound+1.0f, upper_bound-0.5f);
     vector2 velocity = {0.0f, 0.0f};
-    particles.push_back(SPHParticle(position, velocity));
+    particles.push_back(FLIPParticle(position, velocity));
   }
 
   int grid_height = (int)((upper_bound / h) + 1);
@@ -54,14 +54,14 @@ SPHSolver::SPHSolver(unsigned int number_of_particles, const float _lower_bound,
 }
 
 
-void SPHSolver::randomizeColor(SPHParticle *p) {
+void FLIPSolver::randomizeColor(FLIPParticle *p) {
   p->color.x = getRandomFloatBetweenValues(0.1, 0.9);
   p->color.y = getRandomFloatBetweenValues(0.1, 0.9);
   p->color.z = getRandomFloatBetweenValues(0.1, 0.9);
 }
 
 
-void SPHSolver::enforceBoundary(SPHParticle *p) {
+void FLIPSolver::enforceBoundary(FLIPParticle *p) {
   bool collision = false;
 
   // enforce top and bottom bounds
@@ -91,7 +91,7 @@ void SPHSolver::enforceBoundary(SPHParticle *p) {
 }
 
 
-float SPHSolver::getInfluence(vector2 xb, vector2 xa) {
+float FLIPSolver::getInfluence(vector2 xb, vector2 xa) {
   float q, result;
 
   q = ((xa-xb).length())/h;
@@ -103,8 +103,8 @@ float SPHSolver::getInfluence(vector2 xb, vector2 xa) {
 }
 
 
-void SPHSolver::calculateDensity (SPHParticle *b) {
-  SPHParticle *a;
+void FLIPSolver::calculateDensity (FLIPParticle *b) {
+  FLIPParticle *a;
   std::vector<size_t> check_indices;
   occupancy_volume->getIndicesOfAllPossibleCollisions(b, &check_indices);
 
@@ -116,7 +116,7 @@ void SPHSolver::calculateDensity (SPHParticle *b) {
 }
 
 
-void SPHSolver::constructOccupancyVolume(vector2 ovllc, vector2 ovurc) {
+void FLIPSolver::constructOccupancyVolume(vector2 ovllc, vector2 ovurc) {
   unsigned int ovnx, ovny;
   float ovdx, ovdy;
 
@@ -135,10 +135,10 @@ void SPHSolver::constructOccupancyVolume(vector2 ovllc, vector2 ovurc) {
   occupancy_volume->cells.resize(ovnx*ovny);
 }
 
-void SPHSolver::constructVelocityGrid() {
+void FLIPSolver::constructVelocityGrid() {
   float influence, total_influence;
   std::vector<FLIPVelocityGridPoint>::iterator vi = velocity_grid.begin();
-  std::vector<SPHParticle>::iterator pi;
+  std::vector<FLIPParticle>::iterator pi;
 
   while(vi != velocity_grid.end()) {
     total_influence = 0.0f;
@@ -162,7 +162,7 @@ void SPHSolver::constructVelocityGrid() {
 }
 
 
-void SPHSolver::leapFrog(float dt) {
+void FLIPSolver::leapFrog(float dt) {
   constructVelocityGrid();
 
   // occupancy volume lower left corner and upper right corner
@@ -170,7 +170,7 @@ void SPHSolver::leapFrog(float dt) {
   vector2 ovurc = vector2(lower_bound, lower_bound);
 
   dt /= 2.0f;
-  std::vector<SPHParticle>::iterator pi = particles.begin();
+  std::vector<FLIPParticle>::iterator pi = particles.begin();
 
   while(pi != particles.end()) {
     pi->position.x += pi->velocity.x * dt;
@@ -233,7 +233,7 @@ void SPHSolver::leapFrog(float dt) {
 }
 
 
-void SPHSolver::sixth(float dt) {
+void FLIPSolver::sixth(float dt) {
   float a, b;
   a = 1.0f / (4.0f - powf(4.0f, 1.0f/3.0f));
   b = 1.0f - 4.0f*a;
@@ -246,7 +246,7 @@ void SPHSolver::sixth(float dt) {
 }
 
 
-void SPHSolver::update(const float dt) {
+void FLIPSolver::update(const float dt) {
   switch (update_function) {
     case LEAP_FROG:
       leapFrog(dt);
@@ -255,7 +255,7 @@ void SPHSolver::update(const float dt) {
       sixth(dt);
       break;
     default:
-      handleError("Error in SPHSolver::update(const float dt, UPDATE_FUNCTION function): Invalid UPDATE_FUNCTION. "
+      handleError("Error in FLIPSolver::update(const float dt, UPDATE_FUNCTION function): Invalid UPDATE_FUNCTION. "
                         "Use LEAP_FROG or SIXTH", true);
       break;
   }

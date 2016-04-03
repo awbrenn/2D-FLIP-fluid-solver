@@ -4,7 +4,7 @@
 
 #include "FLIPForce.h"
 
-vector2 calculateGradW(SPHParticle *b, SPHParticle *a, float h) {
+vector2 calculateGradW(FLIPParticle *b, FLIPParticle *a, float h) {
   float q, one_minus_q, magnitude;
   vector2 result;
 
@@ -21,13 +21,13 @@ vector2 calculateGradW(SPHParticle *b, SPHParticle *a, float h) {
   return result;
 }
 
-float SPHForce::calculatePressure(SPHParticle *p) {
+float FLIPForce::calculatePressure(FLIPParticle *p) {
   float result;
   result = beta * (powf((p->density/density_base), gamma) -1.0f);
   return result;
 }
 
-float SPHForce::calculateViscocityForce(SPHParticle *b, SPHParticle *a, float h) {
+float FLIPForce::calculateViscocityForce(FLIPParticle *b, FLIPParticle *a, float h) {
   float viscosity_force;
 
   vector2 x_ba = (b->position - a->position);
@@ -40,12 +40,12 @@ float SPHForce::calculateViscocityForce(SPHParticle *b, SPHParticle *a, float h)
   return viscosity_force;
 }
 
-vector2 SPHForce::evaluateForce(std::vector<SPHParticle> *particles, SPHParticle *b,
-                                SPHOccupancyVolume *occupancy_volume, float h) {
+vector2 FLIPForce::evaluateForce(std::vector<FLIPParticle> *particles, FLIPParticle *b,
+                                FLIPOccupancyVolume *occupancy_volume, float h) {
   vector2 force;
   vector2 grad_w;
   float pressure_a, pressure_b, viscosity_force;
-  SPHParticle *a;
+  FLIPParticle *a;
   std::vector<size_t> check_indices;
 
   occupancy_volume->getIndicesOfAllPossibleCollisions(b, &check_indices);

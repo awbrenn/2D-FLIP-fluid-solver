@@ -6,15 +6,15 @@
  * Due Date:       3/8/2016
  */
 
-#ifndef SPHPARTICLE_H
-#define SPHPARTICLE_H
+#ifndef FLIPPARTICLE_H
+#define FLIPPARTICLE_H
 #include "vector2.h"
 
 typedef struct vector3 {
   float x, y, z;
 } vector3;
 
-class SPHParticle {
+class FLIPParticle {
   public:
     vector2 position;
     vector2 velocity;
@@ -24,8 +24,8 @@ class SPHParticle {
     float density;
     float pressure;
 
-    SPHParticle(const vector2 _position, const vector2 _velocity);
+    FLIPParticle(const vector2 _position, const vector2 _velocity);
 };
 
 
-#endif //SPHPARTICLE_H
+#endif //FLIPPARTICLE_H

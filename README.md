@@ -9,9 +9,9 @@ Due Date:       4/7/2016
 
 ##Purpose:
 
-The purpose of this assignment is to get a better understanding of how
-smoothed particle hydrodynmics (SPH) approach to fluid simulation / particle
-dynamics works. This program simulates SPH in two dimensions for the
+The purpose of this assignment is to get a better understanding of how a
+fluid solver with implicit particles (FLIP) approach to fluid simulation / particle
+dynamics works.
 
 
 ##Extra Features:
@@ -33,7 +33,7 @@ the simulation.
 
 
 ##Usage:
-./sph_fluid_simulator [-update_method (LF or S for leap frog or sixth)] [-output_path output_path]
+./FLIP_fluid_simulator [-update_method (LF or S for leap frog or sixth)] [-output_path output_path]
                       [-write_on_start 0 or 1 for off or on]  [-party_mode (0 or 1 for off or on)]
 
 The flags can be set in any order. And have default values of:
@@ -43,7 +43,7 @@ The flags can be set in any order. And have default values of:
 -party_mode: 0 (off)
 
 
-sph_fluid_simulator keyboard choices
+FLIP_fluid_simulator keyboard choices
 ./,      increase/decrease % of energy retained after bounce
 p        turn on party mode. Randomizes particle color on collison
 w/a/s/d  switches gravity to point up/left/down/right

@@ -6,8 +6,8 @@
  * Due Date:       3/8/2016
  */
 
-#ifndef SPHSOLVER_H
-#define SPHSOLVER_H
+#ifndef FLIPSOLVER_H
+#define FLIPSOLVER_H
 
 #include "FLIPParticle.h"
 #include "FLIPForce.h"
@@ -18,11 +18,11 @@
 
 enum UPDATE_FUNCTION {LEAP_FROG, SIXTH};
 
-class SPHSolver {
+class FLIPSolver {
   private:
-    void randomizeColor(SPHParticle *p);
-    void enforceBoundary(SPHParticle *p);
-    void calculateDensity (SPHParticle *b);
+    void randomizeColor(FLIPParticle *p);
+    void enforceBoundary(FLIPParticle *p);
+    void calculateDensity (FLIPParticle *b);
     float getInfluence(vector2 xb, vector2 xa);
     void constructOccupancyVolume(vector2 ovllc, vector2 ovurc);
     void constructVelocityGrid();
@@ -39,13 +39,13 @@ class SPHSolver {
     float h;
     bool party_mode;
     std::vector<FLIPVelocityGridPoint> velocity_grid;
-    std::vector<SPHParticle> particles;
-    SPHOccupancyVolume *occupancy_volume;
-    SPHForce force;
+    std::vector<FLIPParticle> particles;
+    FLIPOccupancyVolume *occupancy_volume;
+    FLIPForce force;
 
 
-    SPHSolver(unsigned int number_of_particles, const float upper_bound, const float lower_bound, const float h);
+    FLIPSolver(unsigned int number_of_particles, const float upper_bound, const float lower_bound, const float h);
     void update(const float dt);
 };
 
-#endif //SPHSOLVER_H
+#endif //FLIPSOLVER_H

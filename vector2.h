@@ -2,8 +2,8 @@
 // Created by awbrenn on 3/11/16.
 //
 
-#ifndef SPH_PARTICLE_VECTOR2_H
-#define SPH_PARTICLE_VECTOR2_H
+#ifndef FLIP_PARTICLE_VECTOR2_H
+#define FLIP_PARTICLE_VECTOR2_H
 
 
 class vector2 {
@@ -32,4 +32,4 @@ public:
 };
 
 
-#endif //SPH_PARTICLE_vector2_H
+#endif //FLIP_PARTICLE_vector2_H

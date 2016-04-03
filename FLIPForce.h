@@ -6,18 +6,18 @@
  * Due Date:       3/8/2016
  */
 
-#ifndef SPHFORCE_H
-#define SPHFORCE_H
+#ifndef FLIPFORCE_H
+#define FLIPFORCE_H
 #include "FLIPParticle.h"
 #include "FLIPOccupancyVolume.h"
 #include <math.h>
 #include <vector>
 #include <omp.h>
 
-class SPHForce {
+class FLIPForce {
   private:
-    float calculatePressure(SPHParticle *p);
-    float calculateViscocityForce(SPHParticle *b, SPHParticle *a, float h);
+    float calculatePressure(FLIPParticle *p);
+    float calculateViscocityForce(FLIPParticle *b, FLIPParticle *a, float h);
 
   public:
     vector2 gravity = vector2(0.0f, -9.8f);
@@ -27,8 +27,8 @@ class SPHForce {
     float viscosity;
     float epsilon;
 
-    vector2 evaluateForce(std::vector<SPHParticle> *particles, SPHParticle *b,
-                              SPHOccupancyVolume *occupancy_volume, float h);
+    vector2 evaluateForce(std::vector<FLIPParticle> *particles, FLIPParticle *b,
+                              FLIPOccupancyVolume *occupancy_volume, float h);
 };
 
-#endif //SPHFORCE_H
+#endif //FLIPFORCE_H

@@ -23,7 +23,7 @@ struct point {
   float x, y, z;
 };
 
-SPHSolver *fluid;
+FLIPSolver *fluid;
 unsigned int iwidth = 512;
 unsigned int iheight = 512;
 unsigned int frame_count = 0;
@@ -133,7 +133,7 @@ void drawParticles() {
   // draw particles
   glPointSize(2.5f);
   glBegin(GL_POINTS);
-  vector<SPHParticle>::iterator pi = fluid->particles.begin();
+  vector<FLIPParticle>::iterator pi = fluid->particles.begin();
   while(pi != fluid->particles.end()) {
     vector3 color = pi->color;
     glColor3f(color.x, color.y, color.z);
@@ -180,7 +180,7 @@ void initParticleSim(UPDATE_FUNCTION update_function, bool party_mode, float den
 
   srand (static_cast <unsigned> (time(0)));
 
-  fluid = new SPHSolver(500, 0.0f, 2.0f, h);
+  fluid = new FLIPSolver(500, 0.0f, 2.0f, h);
   fluid->update_function = update_function;
   fluid->party_mode = party_mode;
 
@@ -287,7 +287,7 @@ void callbackKeyboard( unsigned char key, int x, int y )
 
 void PrintUsage()
 {
-  cout << "sph_fluid_simulator keyboard choices\n";
+  cout << "FLIP_fluid_simulator keyboard choices\n";
   cout << "./,      increase/decrease % of energy retained after bounce\n";
   cout << "p        turn on party mode. Randomizes particle color on collison\n";
   cout << "w/a/s/d  switches gravity to point up/left/down/right\n";
@@ -359,7 +359,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_RGBA | GLUT_MULTISAMPLE);
   glutInitWindowSize(iwidth, iheight);
   glutInitWindowPosition(100, 50);
-  glutCreateWindow("2D SPH Particle Simulation");
+  glutCreateWindow("2D FLIP Particle Simulation");
   glClearColor(0.0, 0.0, 0.0, 0.0);
   glEnable(GL_MULTISAMPLE_ARB);
   setupTheViewVolume();
