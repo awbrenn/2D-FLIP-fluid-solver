@@ -26,7 +26,7 @@ up/left/down/right respectively.
 Another feature I added is a dampening factor on particle bounces. This is
 a scalar multiplier, which reduces or increases the output velocity of a
 particle after it collides with a boundary. Try increasing and decreasing
-the percentage of energy retained on a bounce with the ,/ . keys.
+the percentage of energy retained on a bounce with the , / . keys.
 
 I encourage you to try playing with this features, and see how they effect
 the simulation.
