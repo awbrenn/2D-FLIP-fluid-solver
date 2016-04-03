@@ -33,8 +33,8 @@ the simulation.
 
 
 ##Usage:
-./sph_fluid_simulator [-update_method (LF or S for leap frog or sixth)] [-output_path output_path]
-                      [-write_on_start 0 or 1 for off or on]  [-party_mode (0 or 1 for off or on)]
+`$> ./sph_fluid_simulator [-update_method (LF or S for leap frog or sixth)] [-output_path output_path]
+                      [-write_on_start 0 or 1 for off or on]  [-party_mode (0 or 1 for off or on)]`
 
 The flags can be set in any order. And have default values of:
 -update_method: S
