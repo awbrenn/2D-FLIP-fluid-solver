@@ -14,6 +14,7 @@ class FLIPVelocityGrid {
     std::vector<FLIPVelocityGridPoint> grid;
     int grid_width;
     int grid_height;
+    int nloops = 1;
 
     const float getDensity(int i, int j);
     const vector2 getVelocity(int i, int j);

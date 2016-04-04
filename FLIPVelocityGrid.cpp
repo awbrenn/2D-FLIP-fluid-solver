@@ -59,7 +59,12 @@ void FLIPVelocityGrid::computeDivergence()  {
 
 void FLIPVelocityGrid::computePressure()
 {
-    Initialize(pressure, Nx*grid_height, 0.0);
+    for (int j = 0; j < grid_height; ++j)
+    {
+        for (int i = 0; i < grid_width; ++i) {
+            grid[gridIndex(i,j)].pressure = 0.0f;
+        }
+    }
 
     for(int k = 0; k < nloops; ++k)
     {
@@ -67,11 +72,11 @@ void FLIPVelocityGrid::computePressure()
         {
             for (int i = 0; i < grid_width; ++i)
             {
-                pressure[pIndex(i,j)] = ((getPressure(i+1, j)    +
-                                          getPressure(i-1, j)    +
-                                          getPressure(i,   j+1)  +
-                                          getPressure(i,   j-1)) *
-                                         0.25f) - ((Dx*Dx/4.0f) * getDivergence(i,j));
+                grid[gridIndex(i,j)].pressure = ((getPressure(i+1, j)    +
+                                                  getPressure(i-1, j)    +
+                                                  getPressure(i,   j+1)  +
+                                                  getPressure(i,   j-1)) *
+                                                  0.25f) - ((Dx*Dx/4.0f) * getDivergence(i,j));
             }
         }
     }
@@ -94,8 +99,8 @@ void FLIPVelocityGrid::computeVelocityBasedOnPressureForces()
         for (int i = 0; i < grid_width; ++i)
         {
             computePressureForces(i, j, &force_x, &force_y);
-            grid.velocity[vIndex(i,j,0)] -= force_x;
-            grid.velocity[vIndex(i,j,1)] -= force_y;
+            grid[gridIndex(i,j)].velocity.x -= force_x;
+            grid[gridIndex(i,j)].velocity.y -= force_y;
         }
     }
 }
