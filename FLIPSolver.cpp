@@ -19,7 +19,8 @@ float getRandomFloatBetweenValues (float lower_bound, float upper_bound) {
 }
 
 
-FLIPSolver::FLIPSolver(unsigned int number_of_particles, const float _lower_bound, const float _upper_bound, const float _h) {
+FLIPSolver::FLIPSolver(unsigned int number_of_particles, const float _lower_bound, const float _upper_bound,
+                       const float _h, const float _dx, const int nloops, const int oploops) {
   lower_bound = _lower_bound;
   upper_bound = _upper_bound;
   dampening = 1.0f;
@@ -37,23 +38,23 @@ FLIPSolver::FLIPSolver(unsigned int number_of_particles, const float _lower_boun
     particles.push_back(FLIPParticle(position, velocity));
   }
 
-  int grid_height = (int)((upper_bound / h) + 1);
-  int grid_width = (int)((upper_bound / h) + 1);
-  float grid_dx = upper_bound / ((float)(grid_width));
-  float grid_dy = upper_bound / ((float)(grid_height));
+  velocity_grid.dx = _dx;
+
+  velocity_grid.grid_width = (int)((upper_bound / h) + 1);
+  velocity_grid.grid_height = (int)((upper_bound / h) + 1);
+
+  float grid_dx = upper_bound / ((float)(velocity_grid.grid_width));
+  float grid_dy = upper_bound / ((float)(velocity_grid.grid_height));
 
   // initalize grid
-  for (unsigned int i = 0; i < grid_height * grid_width; ++i) {
+  for (unsigned int i = 0; i < velocity_grid.grid_width * velocity_grid.grid_width; ++i) {
     FLIPVelocityGridPoint grid_point;
     grid_point.velocity = vector2(0.0f, 0.0f);
-    grid_point.position.x = (i % grid_width) * grid_dx;
-    grid_point.position.y = (i / grid_width) * grid_dy;
+    grid_point.position.x = (i % velocity_grid.grid_width) * grid_dx;
+    grid_point.position.y = (i / velocity_grid.grid_width) * grid_dy;
 
     velocity_grid.grid.push_back(grid_point);
   }
-
-  velocity_grid.grid_width = grid_width;
-  velocity_grid.grid_height = grid_height;
 }
 
 

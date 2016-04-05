@@ -44,7 +44,8 @@ class FLIPSolver {
     FLIPForce force;
 
 
-    FLIPSolver(unsigned int number_of_particles, const float upper_bound, const float lower_bound, const float h);
+    FLIPSolver(unsigned int number_of_particles, const float upper_bound, const float lower_bound,
+                   const float h, const float dx, const int nloops, const int oploops);
     void update(const float dt);
 };
 

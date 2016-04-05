@@ -176,11 +176,12 @@ void drawScene()
 
 
 void initParticleSim(UPDATE_FUNCTION update_function, bool party_mode, float density_base, float beta, float gamma,
-                     float viscosity, float epsilon, const float h) {
+                     float viscosity, float epsilon, const float h, const float dx, const int nloops, const int oploops)
+{
 
   srand (static_cast <unsigned> (time(0)));
 
-  fluid = new FLIPSolver(500, 0.0f, 2.0f, h);
+  fluid = new FLIPSolver(500, 0.0f, 2.0f, h, dx, nloops, oploops);
   fluid->update_function = update_function;
   fluid->party_mode = party_mode;
 
@@ -324,6 +325,11 @@ int main(int argc, char** argv) {
   float viscosity = clf.find("-viscosity", 1.0f, "Viscosity of the fluid");
   float epsilon = clf.find("-epsilon", 0.1f, "Another factor used in the denominator of the viscosity calculation");
 
+  float h = clf.find("-radius", 0.15, "Radius of influence of each particle.");
+  float dx = clf.find("-grid_cell_size", 0.01, "Size of each grid cell on velocity grid");
+  int nloops = clf.find("-nloops", 1, "Number of loops over pressure calculation");
+  int oploops = clf.find("-oploops", 1, "NUber of orthogonal projections");
+
   // validate flags
   if (party_mode != 0 && party_mode != 1) { handleError("Invalid usage of party mode flag", true); }
   if (write_on_start != 0 && write_on_start != 1) { handleError("Invalid usage of write on start flag", true); }
@@ -340,9 +346,7 @@ int main(int argc, char** argv) {
   if (update_function_str.compare("S") == 0) { update_function = SIXTH; }
   else {update_function = LEAP_FROG; }
 
-  float h = 0.15;
-
-  initParticleSim(update_function, party_mode != 0, density_base, beta, gamma, viscosity, epsilon, h);
+  initParticleSim(update_function, party_mode != 0, density_base, beta, gamma, viscosity, epsilon, h, dx, nloops, oploops);
 
   // decide whether to write to output or not
   write_to_output = write_on_start != 0;
