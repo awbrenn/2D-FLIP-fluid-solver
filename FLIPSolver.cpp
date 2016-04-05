@@ -290,7 +290,7 @@ void FLIPSolver::update(const float dt) {
   constructVelocityGrid();
 
   // 2) add forces to velocity & 3) Create incompressible velocity
-  vector2 gravity = vector2(0.0f, 9.8f);
+  vector2 gravity = vector2(0.0f, -9.8f);
   velocity_grid.updateGrid(gravity, dt);
 
   // 4) simplistic update
