@@ -20,7 +20,7 @@ float getRandomFloatBetweenValues (float lower_bound, float upper_bound) {
 
 
 FLIPSolver::FLIPSolver(unsigned int number_of_particles, const float _lower_bound, const float _upper_bound,
-                       const float _h, const float _dx, const int nloops, const int oploops) {
+                       const float _h, const float _dx, const int _nloops, const int _oploops) {
   lower_bound = _lower_bound;
   upper_bound = _upper_bound;
   dampening = 1.0f;
@@ -28,6 +28,9 @@ FLIPSolver::FLIPSolver(unsigned int number_of_particles, const float _lower_boun
   party_mode = false;
   occupancy_volume = new FLIPOccupancyVolume();
   h = _h;
+
+  velocity_grid.nloops = _nloops;
+  velocity_grid.oploops = _oploops;
 
   // initialize particles
   for (unsigned int i = 0; i < number_of_particles; ++i) {
@@ -138,10 +141,12 @@ void FLIPSolver::constructOccupancyVolume(vector2 ovllc, vector2 ovurc) {
 
 void FLIPSolver::constructVelocityGrid() {
   float influence, total_influence;
+  bool particle_within_radius;
   std::vector<FLIPVelocityGridPoint>::iterator vi = velocity_grid.grid.begin();
   std::vector<FLIPParticle>::iterator pi;
 
   while(vi != velocity_grid.grid.end()) {
+    particle_within_radius = false;
     total_influence = 0.0f;
     vi->velocity = 0.0f;
     vi->velocity = 0.0f;
@@ -154,11 +159,12 @@ void FLIPSolver::constructVelocityGrid() {
 
       vi->velocity += pi->velocity.x * influence;
       vi->velocity += pi->velocity.y * influence;
+      if (influence > 0.0f) { particle_within_radius = true; }
       ++pi;
     }
 
     // if a particle exists in that grid region add density;
-    if (vi->velocity.length() > 0.0f) {
+    if (particle_within_radius) {
       vi->density = 1.0f;
     }
 
@@ -259,6 +265,7 @@ void FLIPSolver::updateParticleVelocity(const float dt) {
 
     pi->velocity = velocity_grid.interpolateVelocityFromGridToParticle(&(*pi));
     pi->position += pi->velocity * dt;
+    enforceBoundary(&(*pi));
 
     ++pi;
   }
@@ -284,12 +291,11 @@ void FLIPSolver::update(const float dt) {
 
   // 2) add forces to velocity & 3) Create incompressible velocity
   vector2 gravity = vector2(0.0f, -9.8f);
-  velocity_grid.updateGrid(gravity, dt);
+  velocity_grid.updateGrid(gravity, dt*0.00001f);
 
   // 4) simplistic update
-  updateParticleVelocity(dt);
+  updateParticleVelocity(dt*0.00001f);
 
   // 5) move particles
-
 
 }
