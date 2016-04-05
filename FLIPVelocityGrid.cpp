@@ -95,8 +95,8 @@ void FLIPVelocityGrid::computeVelocityBasedOnPressureForces() {
 void FLIPVelocityGrid::computeVelocity(vector2 constant_force, float dt) {
   for (int j=0; j<grid_height; ++j) {
     for (int i=0; i<grid_width; ++i) {
-      grid[gridIndex(i, j)].velocity.x += (constant_force.x * getDensity(i, j) * dt);
-      grid[gridIndex(i, j)].velocity.y += (constant_force.y * getDensity(i, j) * dt);
+      grid[gridIndex(i, j)].velocity.x += (constant_force.x * dt);
+      grid[gridIndex(i, j)].velocity.y += (constant_force.y * dt);
     }
   }
 }
@@ -118,12 +118,12 @@ vector2 FLIPVelocityGrid::interpolateVelocityFromGridToParticle(FLIPParticle *pa
     vector2 velocity = vector2(0.0f, 0.0f);
 
     // get index of sample
-    const int i = (int) (particle->position.x / dx);
-    const int j = (int) (particle->position.y / dx);
+    const int i = (int) (particle->position.x * dx);
+    const int j = (int) (particle->position.y * dx);
 
     // get weights of samples
     const float ax = std::abs(particle->position.x / dx - i);
-    const float ay = std::abs(particle->position.y/dx - j);
+    const float ay = std::abs(particle->position.y / dx - j);
     const float w1 = (1-ax) * (1-ay);
     const float w2 =    ax  * (1-ay);
     const float w3 = (1-ax) *    ay;

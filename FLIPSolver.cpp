@@ -264,7 +264,7 @@ void FLIPSolver::updateParticleVelocity(const float dt) {
   while(pi != particles.end()) {
 
     pi->velocity = velocity_grid.interpolateVelocityFromGridToParticle(&(*pi));
-    pi->position += pi->velocity * dt;
+    pi->position += pi->velocity.scale(dt);
     enforceBoundary(&(*pi));
 
     ++pi;
@@ -290,11 +290,11 @@ void FLIPSolver::update(const float dt) {
   constructVelocityGrid();
 
   // 2) add forces to velocity & 3) Create incompressible velocity
-  vector2 gravity = vector2(0.0f, -9.8f);
-  velocity_grid.updateGrid(gravity, dt*0.00001f);
+  vector2 gravity = vector2(0.0f, 9.8f);
+  velocity_grid.updateGrid(gravity, dt);
 
   // 4) simplistic update
-  updateParticleVelocity(dt*0.00001f);
+  updateParticleVelocity(dt);
 
   // 5) move particles
 

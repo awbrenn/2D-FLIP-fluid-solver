@@ -211,7 +211,7 @@ void callbackDisplay( void )
 
 // animate and display new result
 void callbackIdle() {
-  float delta_time = (1.0f/48.0f);
+  float delta_time = (1.0f / 24.0f);
   if (!simulation_paused) { fluid->update(delta_time); }
   if (write_to_output) { writeImage(); }
   glutPostRedisplay();
