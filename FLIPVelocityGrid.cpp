@@ -2,8 +2,8 @@
 // Created by awbrenn on 4/3/16.
 //
 
+#include <complex>
 #include "FLIPVelocityGrid.h"
-
 
 const float FLIPVelocityGrid::getDensity(int i, int j) {
   if (i < grid_width && i >= 0 && j < grid_height && j >= 0)
@@ -13,7 +13,7 @@ const float FLIPVelocityGrid::getDensity(int i, int j) {
 }
 
 
-const vector2 FLIPVelocityGrid::getVelocity(int i, int j) {
+vector2 FLIPVelocityGrid::getVelocity(int i, int j) {
   if (i < grid_width && i >= 0 && j < grid_height && j >= 0)
     return grid[gridIndex(i, j)].velocity;
   else
@@ -111,4 +111,28 @@ void FLIPVelocityGrid::updateGrid(vector2 constant_force, float dt) {
     computePressure();
     computeVelocityBasedOnPressureForces();
   }
+}
+
+
+vector2 FLIPVelocityGrid::interpolateVelocityFromGridToParticle(FLIPParticle *particle) {
+    vector2 velocity = vector2(0.0f, 0.0f);
+
+    // get index of sample
+    const int i = (int) (particle->position.x / dx);
+    const int j = (int) (particle->position.y / dx);
+
+    // get weights of samples
+    const float ax = std::abs(particle->position.x / dx - i);
+    const float ay = std::abs(particle->position.y/dx - j);
+    const float w1 = (1-ax) * (1-ay);
+    const float w2 =    ax  * (1-ay);
+    const float w3 = (1-ax) *    ay;
+    const float w4 =    ax  *    ay;
+
+    velocity = getVelocity(i    , j    ).scale(w1) +
+               getVelocity(i + 1, j    ).scale(w2) +
+               getVelocity(i    , j + 1).scale(w3) +
+               getVelocity(i + 1, j + 1).scale(w4);
+
+    return velocity;
 }

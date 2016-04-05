@@ -8,6 +8,8 @@
 
 #include <vector>
 #include "FLIPVelocityGridPoint.h"
+#include "FLIPParticle.h"
+#include <math.h>
 
 class FLIPVelocityGrid {
   public:
@@ -19,7 +21,7 @@ class FLIPVelocityGrid {
     float dx;
 
     const float getDensity(int i, int j);
-    const vector2 getVelocity(int i, int j);
+    vector2 getVelocity(int i, int j);
     const float getPressure(int i, int j);
     const float getDivergence(int i, int j);
     void computeDivergence();
@@ -28,6 +30,7 @@ class FLIPVelocityGrid {
     void computeVelocityBasedOnPressureForces();
     void computeVelocity(vector2 constant_force, float dt);
     void updateGrid(vector2 constant_force, float dt);
+    vector2 interpolateVelocityFromGridToParticle(FLIPParticle *particle);
 
     int gridIndex(int i, int j) const { return i+grid_width*j; }
 };

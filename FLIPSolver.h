@@ -26,8 +26,9 @@ class FLIPSolver {
     float getInfluence(vector2 xb, vector2 xa);
     void constructOccupancyVolume(vector2 ovllc, vector2 ovurc);
     void constructVelocityGrid();
-    void leapFrog(float dt);
-    void sixth(float dt);
+    void updateParticleVelocity(const float dt);
+//    void leapFrog(float dt);
+//    void sixth(float dt);
 
   public:
     UPDATE_FUNCTION update_function;

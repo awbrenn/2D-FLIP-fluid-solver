@@ -40,18 +40,15 @@ FLIPSolver::FLIPSolver(unsigned int number_of_particles, const float _lower_boun
 
   velocity_grid.dx = _dx;
 
-  velocity_grid.grid_width = (int)((upper_bound / h) + 1);
-  velocity_grid.grid_height = (int)((upper_bound / h) + 1);
-
-  float grid_dx = upper_bound / ((float)(velocity_grid.grid_width));
-  float grid_dy = upper_bound / ((float)(velocity_grid.grid_height));
+  velocity_grid.grid_width = (int)((upper_bound / velocity_grid.dx) + 1);
+  velocity_grid.grid_height = (int)((upper_bound / velocity_grid.dx) + 1);
 
   // initalize grid
   for (unsigned int i = 0; i < velocity_grid.grid_width * velocity_grid.grid_width; ++i) {
     FLIPVelocityGridPoint grid_point;
     grid_point.velocity = vector2(0.0f, 0.0f);
-    grid_point.position.x = (i % velocity_grid.grid_width) * grid_dx;
-    grid_point.position.y = (i / velocity_grid.grid_width) * grid_dy;
+    grid_point.position.x = (i % velocity_grid.grid_width) * velocity_grid.dx;
+    grid_point.position.y = (i / velocity_grid.grid_width) * velocity_grid.dx;
 
     velocity_grid.grid.push_back(grid_point);
   }
@@ -255,6 +252,19 @@ void FLIPSolver::constructVelocityGrid() {
 //}
 
 
+void FLIPSolver::updateParticleVelocity(const float dt) {
+  std::vector<FLIPParticle>::iterator pi = particles.begin();
+
+  while(pi != particles.end()) {
+
+    pi->velocity = velocity_grid.interpolateVelocityFromGridToParticle(&(*pi));
+    pi->position += pi->velocity * dt;
+
+    ++pi;
+  }
+}
+
+
 void FLIPSolver::update(const float dt) {
 //  switch (update_function) {
 //    case LEAP_FROG:
@@ -268,7 +278,18 @@ void FLIPSolver::update(const float dt) {
 //                        "Use LEAP_FROG or SIXTH", true);
 //      break;
 //  }
+
+  // 1) construct velocity on the grid
   constructVelocityGrid();
+
+  // 2) add forces to velocity & 3) Create incompressible velocity
+  vector2 gravity = vector2(0.0f, -9.8f);
+  velocity_grid.updateGrid(gravity, dt);
+
+  // 4) simplistic update
+  updateParticleVelocity(dt);
+
+  // 5) move particles
 
 
 }

@@ -325,8 +325,8 @@ int main(int argc, char** argv) {
   float viscosity = clf.find("-viscosity", 1.0f, "Viscosity of the fluid");
   float epsilon = clf.find("-epsilon", 0.1f, "Another factor used in the denominator of the viscosity calculation");
 
-  float h = clf.find("-radius", 0.15, "Radius of influence of each particle.");
-  float dx = clf.find("-grid_cell_size", 0.01, "Size of each grid cell on velocity grid");
+  float h = clf.find("-radius", 0.15f, "Radius of influence of each particle");
+  float dx = clf.find("-grid_cell_size", 0.01f, "Size of each grid cell on velocity grid");
   int nloops = clf.find("-nloops", 1, "Number of loops over pressure calculation");
   int oploops = clf.find("-oploops", 1, "NUber of orthogonal projections");
 
