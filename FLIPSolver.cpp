@@ -171,101 +171,104 @@ void FLIPSolver::constructVelocityGrid() {
 }
 
 
-void FLIPSolver::leapFrog(float dt) {
-  constructVelocityGrid();
+//void FLIPSolver::leapFrog(float dt) {
+//  constructVelocityGrid();
+//
+//  // occupancy volume lower left corner and upper right corner
+//  vector2 ovllc = vector2(upper_bound, upper_bound);
+//  vector2 ovurc = vector2(lower_bound, lower_bound);
+//
+//  dt /= 2.0f;
+//  std::vector<FLIPParticle>::iterator pi = particles.begin();
+//
+//  while(pi != particles.end()) {
+//    pi->position.x += pi->velocity.x * dt;
+//    pi->position.y += pi->velocity.y * dt;
+//    enforceBoundary(&(*pi));
+//
+//    if (ovllc.x > pi->position.x) { ovllc.x = pi->position.x; }
+//    if (ovllc.y > pi->position.y) { ovllc.y = pi->position.y; }
+//    if (ovurc.x < pi->position.x) { ovurc.x = pi->position.x; }
+//    if (ovurc.y < pi->position.y) { ovurc.y = pi->position.y; }
+//
+//    ++pi;
+//  }
+//
+//  occupancy_volume->ovllc = ovllc;
+//  occupancy_volume->ovurc = ovurc;
+//
+//  // create and populate the occupancy volume
+//  constructOccupancyVolume(ovllc, ovurc);
+//  occupancy_volume->populateOccupancyVolume(&particles);
+//
+//  pi = particles.begin();
+//  while(pi != particles.end()) {
+//    calculateDensity(&(*pi));
+//    ++pi;
+//  }
+//
+//  highest_velocity = 0.0001;
+//  highest_density = 0.0001;
+//
+//  pi = particles.begin();
+//  while(pi != particles.end()) {
+//    pi->acceleration = force.evaluateForce(&particles, &(*pi), occupancy_volume, h);
+//    pi->velocity.x += pi->acceleration.x*dt*2.0f;
+//    pi->velocity.y += pi->acceleration.y*dt*2.0f;
+//    pi->position.x += pi->velocity.x*dt;
+//    pi->position.y += pi->velocity.y*dt;
+//
+//    if (pi->velocity.length() > highest_velocity) { highest_velocity = pi->velocity.length(); }
+//    if (pi->density > highest_density) { highest_density = pi->density; }
+//
+//    enforceBoundary(&(*pi));
+//    ++pi;
+//  }
+//
+//  pi = particles.begin();
+//  while(pi != particles.end()) {
+//    float base_percentage, red_percentage, blue_percentage;
+//    base_percentage = pi->velocity.length() / highest_velocity;
+//
+//    red_percentage = base_percentage;
+//    blue_percentage = 1.0f - red_percentage;
+//
+//    pi->color.x = red_percentage;
+//    pi->color.y = 0.0f;
+//    pi->color.z = blue_percentage;
+//
+//    ++pi;
+//  }
+//}
 
-  // occupancy volume lower left corner and upper right corner
-  vector2 ovllc = vector2(upper_bound, upper_bound);
-  vector2 ovurc = vector2(lower_bound, lower_bound);
 
-  dt /= 2.0f;
-  std::vector<FLIPParticle>::iterator pi = particles.begin();
-
-  while(pi != particles.end()) {
-    pi->position.x += pi->velocity.x * dt;
-    pi->position.y += pi->velocity.y * dt;
-    enforceBoundary(&(*pi));
-
-    if (ovllc.x > pi->position.x) { ovllc.x = pi->position.x; }
-    if (ovllc.y > pi->position.y) { ovllc.y = pi->position.y; }
-    if (ovurc.x < pi->position.x) { ovurc.x = pi->position.x; }
-    if (ovurc.y < pi->position.y) { ovurc.y = pi->position.y; }
-
-    ++pi;
-  }
-
-  occupancy_volume->ovllc = ovllc;
-  occupancy_volume->ovurc = ovurc;
-
-  // create and populate the occupancy volume
-  constructOccupancyVolume(ovllc, ovurc);
-  occupancy_volume->populateOccupancyVolume(&particles);
-
-  pi = particles.begin();
-  while(pi != particles.end()) {
-    calculateDensity(&(*pi));
-    ++pi;
-  }
-
-  highest_velocity = 0.0001;
-  highest_density = 0.0001;
-
-  pi = particles.begin();
-  while(pi != particles.end()) {
-    pi->acceleration = force.evaluateForce(&particles, &(*pi), occupancy_volume, h);
-    pi->velocity.x += pi->acceleration.x*dt*2.0f;
-    pi->velocity.y += pi->acceleration.y*dt*2.0f;
-    pi->position.x += pi->velocity.x*dt;
-    pi->position.y += pi->velocity.y*dt;
-
-    if (pi->velocity.length() > highest_velocity) { highest_velocity = pi->velocity.length(); }
-    if (pi->density > highest_density) { highest_density = pi->density; }
-
-    enforceBoundary(&(*pi));
-    ++pi;
-  }
-
-  pi = particles.begin();
-  while(pi != particles.end()) {
-    float base_percentage, red_percentage, blue_percentage;
-    base_percentage = pi->velocity.length() / highest_velocity;
-
-    red_percentage = base_percentage;
-    blue_percentage = 1.0f - red_percentage;
-
-    pi->color.x = red_percentage;
-    pi->color.y = 0.0f;
-    pi->color.z = blue_percentage;
-
-    ++pi;
-  }
-}
-
-
-void FLIPSolver::sixth(float dt) {
-  float a, b;
-  a = 1.0f / (4.0f - powf(4.0f, 1.0f/3.0f));
-  b = 1.0f - 4.0f*a;
-
-  leapFrog(a*dt);
-  leapFrog(a*dt);
-  leapFrog(b*dt);
-  leapFrog(a*dt);
-  leapFrog(a*dt);
-}
+//void FLIPSolver::sixth(float dt) {
+//  float a, b;
+//  a = 1.0f / (4.0f - powf(4.0f, 1.0f/3.0f));
+//  b = 1.0f - 4.0f*a;
+//
+//  leapFrog(a*dt);
+//  leapFrog(a*dt);
+//  leapFrog(b*dt);
+//  leapFrog(a*dt);
+//  leapFrog(a*dt);
+//}
 
 
 void FLIPSolver::update(const float dt) {
-  switch (update_function) {
-    case LEAP_FROG:
-      leapFrog(dt);
-      break;
-    case SIXTH:
-      sixth(dt);
-      break;
-    default:
-      handleError("Error in FLIPSolver::update(const float dt, UPDATE_FUNCTION function): Invalid UPDATE_FUNCTION. "
-                        "Use LEAP_FROG or SIXTH", true);
-      break;
-  }
+//  switch (update_function) {
+//    case LEAP_FROG:
+//      leapFrog(dt);
+//      break;
+//    case SIXTH:
+//      sixth(dt);
+//      break;
+//    default:
+//      handleError("Error in FLIPSolver::update(const float dt, UPDATE_FUNCTION function): Invalid UPDATE_FUNCTION. "
+//                        "Use LEAP_FROG or SIXTH", true);
+//      break;
+//  }
+  constructVelocityGrid();
+
+
 }
