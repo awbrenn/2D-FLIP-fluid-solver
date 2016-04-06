@@ -264,9 +264,18 @@ void FLIPSolver::updateParticleVelocity(const float dt) {
   while(pi != particles.end()) {
 
     pi->velocity = velocity_grid.interpolateVelocityFromGridToParticle(&(*pi));
-    pi->position += pi->velocity.scale(dt);
+
+    std::cout << pi->velocity.x << " " << pi->velocity.y << std::endl;
+
+    ++pi;
+  }
+
+  pi = particles.begin();
+  while(pi != particles.end()) {
+    pi->position = pi->position * pi->velocity.scale(dt);
     enforceBoundary(&(*pi));
 
+//    std::cout << pi->position.x << " " << pi->position.y << std::endl;
     ++pi;
   }
 }
