@@ -181,7 +181,7 @@ void initParticleSim(UPDATE_FUNCTION update_function, bool party_mode, float den
 
   srand (static_cast <unsigned> (time(0)));
 
-  fluid = new FLIPSolver(500, 0.0f, 2.0f, h, dx, nloops, oploops);
+  fluid = new FLIPSolver(1, 0.0f, 2.0f, h, dx, nloops, oploops);
   fluid->update_function = update_function;
   fluid->party_mode = party_mode;
 

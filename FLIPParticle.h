@@ -18,11 +18,8 @@ class FLIPParticle {
   public:
     vector2 position;
     vector2 velocity;
-    vector2 acceleration;
     vector3 color;
     float mass;
-    float density;
-    float pressure;
 
     FLIPParticle(const vector2 _position, const vector2 _velocity);
 };
