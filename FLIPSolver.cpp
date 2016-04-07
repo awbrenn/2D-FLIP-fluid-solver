@@ -131,9 +131,7 @@ void FLIPSolver::constructVelocityGrid() {
   bool particle_within_radius;
   std::vector<FLIPVelocityGridPoint>::iterator vi = velocity_grid.grid.begin();
   std::vector<FLIPParticle>::iterator pi;
-
-  int i = 0;
-
+  
   while(vi != velocity_grid.grid.end()) {
     particle_within_radius = false;
     total_influence = 0.0f;
@@ -151,7 +149,6 @@ void FLIPSolver::constructVelocityGrid() {
       if (influence > 0.0f) {
         particle_within_radius = true;
       }
-      ++i;
       ++pi;
     }
 
