@@ -10,6 +10,7 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <OpenImageIO/imageio.h>
+#include <omp.h>
 #include "FLIPSolver.h"
 #include "CmdLineFind.h"
 
@@ -184,13 +185,6 @@ void initParticleSim(UPDATE_FUNCTION update_function, bool party_mode, float den
   fluid = new FLIPSolver(1, 0.0f, 2.0f, h, dx, nloops, oploops);
   fluid->update_function = update_function;
   fluid->party_mode = party_mode;
-
-  // setting force parameters
-  fluid->force.density_base = density_base;
-  fluid->force.beta = beta;
-  fluid->force.gamma = gamma;
-  fluid->force.viscosity = viscosity;
-  fluid->force.epsilon = epsilon;
 }
 
 
@@ -238,25 +232,25 @@ void callbackKeyboard( unsigned char key, int x, int y )
     cout << "Exiting Program" << endl;
     exit(0);
 
-    case 'w':
-      fluid->force.gravity = {0.0f, 9.8f};
-      cout << "Gravity is now up" << endl;
-      break;
-
-    case 'a':
-      fluid->force.gravity = {-9.8f, 0.0f};
-      cout << "Gravity is now left" << endl;
-      break;
-
-    case 's':
-      fluid->force.gravity = {0.0f, -9.8f};
-      cout << "Gravity is now down" << endl;
-      break;
-
-    case 'd':
-      fluid->force.gravity = {9.8f, 0.0f};
-      cout << "Gravity is now right" << endl;
-      break;
+//    case 'w':
+//      fluid->force.gravity = {0.0f, 9.8f};
+//      cout << "Gravity is now up" << endl;
+//      break;
+//
+//    case 'a':
+//      fluid->force.gravity = {-9.8f, 0.0f};
+//      cout << "Gravity is now left" << endl;
+//      break;
+//
+//    case 's':
+//      fluid->force.gravity = {0.0f, -9.8f};
+//      cout << "Gravity is now down" << endl;
+//      break;
+//
+//    case 'd':
+//      fluid->force.gravity = {9.8f, 0.0f};
+//      cout << "Gravity is now right" << endl;
+//      break;
 
     case 'p':
       fluid->party_mode = !fluid->party_mode;

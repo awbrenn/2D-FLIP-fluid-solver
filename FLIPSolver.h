@@ -10,7 +10,6 @@
 #define FLIPSOLVER_H
 
 #include "FLIPParticle.h"
-#include "FLIPForce.h"
 #include "math.h"
 #include "FLIPOccupancyVolume.h"
 #include "FLIPVelocityGrid.h"
@@ -22,13 +21,10 @@ class FLIPSolver {
   private:
     void randomizeColor(FLIPParticle *p);
     void enforceBoundary(FLIPParticle *p);
-    void calculateDensity (FLIPParticle *b);
     float getInfluence(vector2 xb, vector2 xa);
     void constructOccupancyVolume(vector2 ovllc, vector2 ovurc);
     void constructVelocityGrid();
     void updateParticleVelocity(const float dt);
-//    void leapFrog(float dt);
-//    void sixth(float dt);
 
   public:
     UPDATE_FUNCTION update_function;
@@ -42,7 +38,6 @@ class FLIPSolver {
     FLIPVelocityGrid velocity_grid;
     std::vector<FLIPParticle> particles;
     FLIPOccupancyVolume *occupancy_volume;
-    FLIPForce force;
 
 
     FLIPSolver(unsigned int number_of_particles, const float upper_bound, const float lower_bound,
