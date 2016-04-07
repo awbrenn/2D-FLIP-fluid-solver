@@ -107,19 +107,6 @@ float FLIPSolver::getInfluence(vector2 xb, vector2 xa) {
 }
 
 
-//void FLIPSolver::calculateDensity (FLIPParticle *b) {
-//  FLIPParticle *a;
-//  std::vector<size_t> check_indices;
-//  occupancy_volume->getIndicesOfAllPossibleCollisions(b, &check_indices);
-//
-//  b->density = 0.0f;
-//  for (unsigned int i = 0; i < check_indices.size(); ++i) {
-//    a = &particles[check_indices.at(i)];
-//    b->density += a->mass * getInfluence(b->position, a->position);
-//  }
-//}
-
-
 void FLIPSolver::constructOccupancyVolume(vector2 ovllc, vector2 ovurc) {
   unsigned int ovnx, ovny;
   float ovdx, ovdy;
@@ -185,10 +172,12 @@ void FLIPSolver::updateParticleVelocity(const float dt) {
 
   while(pi != particles.end()) {
 
+    std::cout << pi->velocity.x << " " << pi->velocity.y << std::endl;
+
     pi->velocity = velocity_grid.interpolateVelocityFromGridToParticle(&(*pi));
 
-    if ((i % 500) == 0)
-      std::cout << pi->velocity.x << " " << pi->velocity.y << " " << i % 500 << std::endl;
+    std::cout << pi->velocity.x << " " << pi->velocity.y << "\n" << std::endl;
+
     ++i;
     ++pi;
   }
@@ -205,18 +194,6 @@ void FLIPSolver::updateParticleVelocity(const float dt) {
 
 
 void FLIPSolver::update(const float dt) {
-//  switch (update_function) {
-//    case LEAP_FROG:
-//      leapFrog(dt);
-//      break;
-//    case SIXTH:
-//      sixth(dt);
-//      break;
-//    default:
-//      handleError("Error in FLIPSolver::update(const float dt, UPDATE_FUNCTION function): Invalid UPDATE_FUNCTION. "
-//                        "Use LEAP_FROG or SIXTH", true);
-//      break;
-//  }
 
   // 1) construct velocity on the grid
   constructVelocityGrid();
