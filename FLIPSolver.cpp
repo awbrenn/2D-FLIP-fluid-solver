@@ -158,7 +158,9 @@ void FLIPSolver::constructVelocityGrid() {
     // if a particle exists in that grid region add density;
     if (particle_within_radius) { vi->density = 1.0f; }
 
-    if (total_influence != 0.0f) { vi->velocity.scale(1.0f / total_influence); }
+    if (total_influence > 0.0f) {
+      vi->velocity.scale(1.0f / total_influence);
+    }
 
     ++vi;
   }
@@ -172,11 +174,11 @@ void FLIPSolver::updateParticleVelocity(const float dt) {
 
   while(pi != particles.end()) {
 
-    std::cout << pi->velocity.x << " " << pi->velocity.y << std::endl;
+    // std::cout << pi->velocity.x << " " << pi->velocity.y << std::endl;
 
     pi->velocity = velocity_grid.interpolateVelocityFromGridToParticle(&(*pi));
 
-    std::cout << pi->velocity.x << " " << pi->velocity.y << "\n" << std::endl;
+    // std::cout << pi->velocity.x << " " << pi->velocity.y << "\n" << std::endl;
 
     ++i;
     ++pi;
@@ -184,7 +186,7 @@ void FLIPSolver::updateParticleVelocity(const float dt) {
 
   pi = particles.begin();
   while(pi != particles.end()) {
-    pi->position = pi->position * pi->velocity.scale(dt);
+    pi->position = pi->position + pi->velocity.scale(dt);
     enforceBoundary(&(*pi));
 
 //    std::cout << pi->position.x << " " << pi->position.y << std::endl;
