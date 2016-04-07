@@ -182,7 +182,7 @@ void initParticleSim(UPDATE_FUNCTION update_function, bool party_mode, float den
 
   srand (static_cast <unsigned> (time(0)));
 
-  fluid = new FLIPSolver(500, 0.0f, 2.0f, h, dx, nloops, oploops);
+  fluid = new FLIPSolver(250, 0.0f, 2.0f, h, dx, nloops, oploops);
   fluid->update_function = update_function;
   fluid->party_mode = party_mode;
 }
@@ -320,7 +320,7 @@ int main(int argc, char** argv) {
   float epsilon = clf.find("-epsilon", 0.1f, "Another factor used in the denominator of the viscosity calculation");
 
   float h = clf.find("-radius", 0.15f, "Radius of influence of each particle");
-  float dx = clf.find("-grid_cell_size", 0.1f, "Size of each grid cell on velocity grid");
+  float dx = clf.find("-grid_cell_size", 0.01f, "Size of each grid cell on velocity grid");
   int nloops = clf.find("-nloops", 1, "Number of loops over pressure calculation");
   int oploops = clf.find("-oploops", 1, "NUber of orthogonal projections");
 

@@ -25,6 +25,7 @@ class FLIPSolver {
     void constructOccupancyVolume(vector2 ovllc, vector2 ovurc);
     void constructVelocityGrid();
     void updateParticleVelocity(const float dt);
+    bool first_pass = true;
 
   public:
     UPDATE_FUNCTION update_function;
