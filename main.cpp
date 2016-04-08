@@ -3,7 +3,7 @@
  * University:     Clemson University
  * Course:         2D Fluid Simulation
  * Professor:      Dr. Jerry Tessendorf
- * Due Date:       3/23/2016
+ * Due Date:       4/7/2016
  */
 
 
@@ -176,13 +176,13 @@ void drawScene()
 //----------------------------------------------------
 
 
-void initParticleSim(UPDATE_FUNCTION update_function, bool party_mode, float density_base, float beta, float gamma,
-                     float viscosity, float epsilon, const float h, const float dx, const int nloops, const int oploops)
+void initParticleSim(UPDATE_FUNCTION update_function, bool party_mode, const float h,
+                     const float dx, const int nloops, const int oploops)
 {
 
   srand (static_cast <unsigned> (time(0)));
 
-  fluid = new FLIPSolver(250, 0.0f, 2.0f, h, dx, nloops, oploops);
+  fluid = new FLIPSolver(1000, 0.0f, 2.0f, h, dx, nloops, oploops);
   fluid->update_function = update_function;
   fluid->party_mode = party_mode;
 }
@@ -231,26 +231,6 @@ void callbackKeyboard( unsigned char key, int x, int y )
     case 'q':
     cout << "Exiting Program" << endl;
     exit(0);
-
-//    case 'w':
-//      fluid->force.gravity = {0.0f, 9.8f};
-//      cout << "Gravity is now up" << endl;
-//      break;
-//
-//    case 'a':
-//      fluid->force.gravity = {-9.8f, 0.0f};
-//      cout << "Gravity is now left" << endl;
-//      break;
-//
-//    case 's':
-//      fluid->force.gravity = {0.0f, -9.8f};
-//      cout << "Gravity is now down" << endl;
-//      break;
-//
-//    case 'd':
-//      fluid->force.gravity = {9.8f, 0.0f};
-//      cout << "Gravity is now right" << endl;
-//      break;
 
     case 'p':
       fluid->party_mode = !fluid->party_mode;
@@ -313,14 +293,8 @@ int main(int argc, char** argv) {
   string update_function_str = clf.find("-update_function", "S", "Function in update (options 'LF' for leap frog or 'S'"
                                         " for sixth)");
 
-  float density_base = clf.find("-density_base", 141.471060526f, "Base density for pressure calculation");
-  float beta = clf.find("-beta", 1.0f, "Constant for pressure calculation");
-  float gamma = clf.find("-gamma", 3.0f, "Gamma for pressure calculation");
-  float viscosity = clf.find("-viscosity", 1.0f, "Viscosity of the fluid");
-  float epsilon = clf.find("-epsilon", 0.1f, "Another factor used in the denominator of the viscosity calculation");
-
   float h = clf.find("-radius", 0.15f, "Radius of influence of each particle");
-  float dx = clf.find("-grid_cell_size", 0.01f, "Size of each grid cell on velocity grid");
+  float dx = clf.find("-grid_cell_size", 0.05f, "Size of each grid cell on velocity grid");
   int nloops = clf.find("-nloops", 1, "Number of loops over pressure calculation");
   int oploops = clf.find("-oploops", 1, "NUber of orthogonal projections");
 
@@ -340,7 +314,7 @@ int main(int argc, char** argv) {
   if (update_function_str.compare("S") == 0) { update_function = SIXTH; }
   else {update_function = LEAP_FROG; }
 
-  initParticleSim(update_function, party_mode != 0, density_base, beta, gamma, viscosity, epsilon, h, dx, nloops, oploops);
+  initParticleSim(update_function, party_mode != 0, h, dx, nloops, oploops);
 
   // decide whether to write to output or not
   write_to_output = write_on_start != 0;

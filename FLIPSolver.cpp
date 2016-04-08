@@ -3,7 +3,7 @@
  * University:     Clemson University
  * Course:         2D Fluid Simulation
  * Professor:      Dr. Jerry Tessendorf
- * Due Date:       3/23/2016
+ * Due Date:       4/7/2016
  */
 
 #include "FLIPSolver.h"
@@ -45,6 +45,7 @@ FLIPSolver::FLIPSolver(unsigned int number_of_particles, const float _lower_boun
 
   velocity_grid.grid_width = (int)((upper_bound / velocity_grid.dx) + 1);
   velocity_grid.grid_height = (int)((upper_bound / velocity_grid.dx) + 1);
+  velocity_grid.density_copy = new float[velocity_grid.grid_width * velocity_grid.grid_height];
 
   // initalize grid
   for (unsigned int i = 0; i < velocity_grid.grid_width * velocity_grid.grid_width; ++i) {
@@ -137,7 +138,8 @@ void FLIPSolver::constructVelocityGrid() {
     total_influence = 0.0f;
     vi->velocity.x = 0.0f;
     vi->velocity.y = 0.0f;
-    vi->density = 0.0f;
+    vi->pressure = 0.0f;
+    vi->divergence = 0.0f;
 
     pi = particles.begin();
 
@@ -145,8 +147,8 @@ void FLIPSolver::constructVelocityGrid() {
       influence = getInfluence(vi->position, pi->position);
       total_influence += influence;
 
-      vi->velocity += pi->velocity.x * influence;
-      vi->velocity += pi->velocity.y * influence;
+      vi->velocity.x += pi->velocity.x * influence;
+      vi->velocity.y += pi->velocity.y * influence;
       if (influence > 0.0f) {
         particle_within_radius = true;
       }
@@ -167,26 +169,24 @@ void FLIPSolver::constructVelocityGrid() {
 }
 
 
-int i = 0;
-
 void FLIPSolver::updateParticleVelocity(const float dt) {
   std::vector<FLIPParticle>::iterator pi = particles.begin();
 
   while(pi != particles.end()) {
 
-    std::cout << pi->velocity.x << " " << pi->velocity.y << std::endl;
+//    std::cout << pi->velocity.x << " " << pi->velocity.y << std::endl;
 
     pi->velocity = velocity_grid.interpolateVelocityFromGridToParticle(&(*pi));
 
-    std::cout << pi->velocity.x << " " << pi->velocity.y << "\n" << std::endl;
+//    std::cout << pi->velocity.x << " " << pi->velocity.y << "\n" << std::endl;
 
-    ++i;
     ++pi;
   }
 
   pi = particles.begin();
   while(pi != particles.end()) {
-    pi->position = pi->position + pi->velocity.scale(dt);
+    pi->position.x = pi->position.x + pi->velocity.x * dt;
+    pi->position.y = pi->position.y + pi->velocity.y * dt;
     enforceBoundary(&(*pi));
 
 //    std::cout << pi->position.x << " " << pi->position.y << std::endl;

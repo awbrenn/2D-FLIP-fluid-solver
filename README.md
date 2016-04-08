@@ -8,32 +8,21 @@ Due Date:       4/7/2016
 
 
 ##Purpose:
-
 The purpose of this assignment is to get a better understanding of how a
 fluid solver with implicit particles (FLIP) approach to fluid simulation / particle
 dynamics works.
 
 
-##Extra Features:
+##Pitfalls:
+This project has some major problems that I was not able to resolve. I will hopefully resolve them
+one day, but for now I need to move onto other things.
 
-I have included several extra features on top of the project requirements.
-These include a party mode that can be activated with the command line flag
--party_mode. It can also be toggled on and off with the 'p' key.
 
-I also made the w/a/s/d keys switch the direction of gravity to
-up/left/down/right respectively.
-
-Another feature I added is a dampening factor on particle bounces. This is
-a scalar multiplier, which reduces or increases the output velocity of a
-particle after it collides with a boundary. Try increasing and decreasing
-the percentage of energy retained on a bounce with the , / . keys.
-
-I encourage you to try playing with this features, and see how they effect
-the simulation.
-
+##Build
+`$> ./build`
 
 ##Usage:
-`$> ./sph_fluid_simulator [-update_method (LF or S for leap frog or sixth)] [-output_path output_path]
+`$> ./FLIP_fluid_simulator [-update_method (LF or S for leap frog or sixth)] [-output_path output_path]
                       [-write_on_start 0 or 1 for off or on]  [-party_mode (0 or 1 for off or on)]`
 
 The flags can be set in any order. And have default values of:  

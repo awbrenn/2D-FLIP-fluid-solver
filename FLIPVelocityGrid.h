@@ -12,6 +12,9 @@
 #include <math.h>
 
 class FLIPVelocityGrid {
+  private:
+    void advectDensity(float dt);
+
   public:
     std::vector<FLIPVelocityGridPoint> grid;
     int grid_width;
@@ -19,6 +22,7 @@ class FLIPVelocityGrid {
     int nloops;
     int oploops;
     float dx;
+    float *density_copy;
 
     const float getDensity(int i, int j);
     vector2 getVelocity(int i, int j);
@@ -31,6 +35,9 @@ class FLIPVelocityGrid {
     void computeVelocity(vector2 constant_force, float dt);
     void updateGrid(vector2 constant_force, float dt);
     vector2 interpolateVelocityFromGridToParticle(FLIPParticle *particle);
+    void bilinearlyInterpolate(const int ii, const int jj, const float x, const float y);
+    const float InterpolateDensity(int i, int j, float w1, float w2, float w3, float w4);
+    const float getDensityCopy(int i, int j);
 
     int gridIndex(int i, int j) const { return i+grid_width*j; }
 };
